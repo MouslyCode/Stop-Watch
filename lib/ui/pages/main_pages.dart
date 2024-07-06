@@ -35,7 +35,16 @@ class _MainPagesState extends State<MainPages> {
 
   void stopTimer() {
     if (!_isTimerRunning) return;
+    _startTime = DateTime.timestamp();
+    _timer?.cancel();
+    setState(() {
+      final now = DateTime.timestamp();
+      _isTimerRunning = false;
+    });
+  }
 
+  void resetTimer() {
+    if (!_isTimerRunning) return;
     _timer?.cancel();
     setState(() {
       _milliSeconds = 0;
@@ -99,12 +108,21 @@ class _MainPagesState extends State<MainPages> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                !_isTimerRunning
+                    ? ElevatedButton(
+                        onPressed: startTimer,
+                        child: Text('Start'),
+                      )
+                    : ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red),
+                        onPressed: stopTimer,
+                        child: Text(
+                          'Stop',
+                          style: TextStyle(color: Colors.white),
+                        )),
                 ElevatedButton(
-                  onPressed: _isTimerRunning ? null : startTimer,
-                  child: Text('Start'),
-                ),
-                ElevatedButton(
-                    onPressed: !_isTimerRunning ? null : stopTimer,
+                    onPressed: !_isTimerRunning ? null : resetTimer,
                     child: Text('Reset'))
               ],
             )
